@@ -56,6 +56,21 @@ namespace TallerPlataformaComercioElectronico.Services
             return lst;
         }
 
+        public async Task<IEnumerable<ShoppingCart>> GetShoppingCartsByUserAndProduct(string userName, int productId)
+        {
+            IEnumerable<ShoppingCart> lst = new List<ShoppingCart>();
+            try
+            {
+                lst = await _shoppingCartRepository.GetShoppingCartsByUser(userName);
+            }
+            catch (Exception ex)
+            {
+                lst = new List<ShoppingCart>();
+            }
+            return lst;
+        }
+
+
         public async Task<bool> Delete(int idCarrito, int idProducto)
         {
 

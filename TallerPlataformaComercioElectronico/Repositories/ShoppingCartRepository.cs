@@ -28,6 +28,19 @@ namespace TallerPlataformaComercioElectronico.Repositories
         {
             return await _context.ShoppingCarts
                 .Where(o => o.UserName == userName)
+                .Where(o => o.IsActive == true)
+                .Include(p => p.Product)
+                .Include(b => b.Product.Brand)
+                .Include(c => c.Product.Category)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<ShoppingCart>> GetShoppingCartsByUserAndProduct(string userName, int productId)
+        {
+            return await _context.ShoppingCarts
+                .Where(o => o.UserName == userName)
+                .Where(o => o.ProductId == productId)
+                .Where(o => o.IsActive == true)
                 .Include(p => p.Product)
                 .Include(b => b.Product.Brand)
                 .Include(c => c.Product.Category)

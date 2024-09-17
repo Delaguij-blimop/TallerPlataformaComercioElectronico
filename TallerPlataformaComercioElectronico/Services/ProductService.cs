@@ -129,5 +129,18 @@ namespace TallerPlataformaComercioElectronico.Services
 
         }
 
+        public async Task<int> GetStockAvailable(int id)
+        {
+            Product product = new Product();
+            try
+            {
+                product = await _productRepository.GetByIdAsync(id);
+            }
+            catch (Exception ex)
+            {
+                product = new Product();
+            }
+            return product.Stock;
+        }
     }
 }

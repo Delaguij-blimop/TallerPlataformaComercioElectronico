@@ -19,7 +19,7 @@ namespace TallerPlataformaComercioElectronico.Controllers
         private readonly IOrderService _orderService;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly string _webRootPath;
-
+        private string _userName;
         public StoreController(ILogger<StoreController> logger, ICategoryService categoryService, IProductService productService, IShoppingCartService shoppingCartService, IGeoService geoService, IOrderService orderService, UserManager<IdentityUser> userManager, IWebHostEnvironment webHostEnvironment)
         {
             _logger = logger;
@@ -118,13 +118,27 @@ namespace TallerPlataformaComercioElectronico.Controllers
         {
             string _userName = await GetCurrentUserName();
             ShoppingCart cart = new ShoppingCart();
+            bool _response;
+
+            if (await ExistsProductInShoppingCart(productId) == false)
+            {
+                //El producto ya existe en el carrito
+                _response = false;
+                return Json(new { response = _response });
+            }
+
+            if (await GetProductStock(productId) <= 1)
+            {
+                //No hay stock del producto
+                _response = false;
+                return Json(new { response = _response });
+            }
 
             cart.UserName = _userName;
             cart.ProductId = productId;
             cart.IsActive = true;
-
             await _shoppingCartService.Insert(cart);
-            bool _response = cart.Id == 0 ? false : true;
+            _response = cart.Id == 0 ? false : true;
 
             return Json(new { response = _response });
         }
@@ -244,8 +258,25 @@ namespace TallerPlataformaComercioElectronico.Controllers
 
         private async Task<string> GetCurrentUserName()
         {
-            var user = await _userManager.GetUserAsync(User);
-            return user.UserName;
+            if (string.IsNullOrEmpty(_userName))
+            {
+                var user = await _userManager.GetUserAsync(User);
+                _userName = user.UserName;
+            }
+            return _userName;
+        }
+
+        private async Task<bool> ExistsProductInShoppingCart(int productId)
+        {
+            string _userName = await GetCurrentUserName();
+            var cart = await _shoppingCartService.GetShoppingCartsByUserAndProduct(_userName, productId);
+            return cart.Any();
+        }
+
+        private async Task<int> GetProductStock(int productId)
+        {
+            int stock = await _productService.GetStockAvailable(productId);
+            return stock;
         }
     }
 }
