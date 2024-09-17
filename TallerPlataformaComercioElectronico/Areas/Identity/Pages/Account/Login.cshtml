@@ -1,0 +1,87 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Acceso";
+    var iconExternalService = "";
+}
+
+<div class="row d-flex justify-content-center col-12">
+    <div class="col-md-4">
+        <section>
+            <form id="account" method="post">
+                <h2>Usar cuenta local.</h2>
+                <hr />
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-floating mb-1">
+                    <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" />
+                    <label asp-for="Input.Email" class="form-label"></label>
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                </div>
+                <div class="form-floating mb-1">
+                    <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" />
+                    <label asp-for="Input.Password" class="form-label"></label>
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                </div>
+                <div>
+                    <div class="checkbox mb-1">
+                        <label asp-for="Input.RememberMe" class="form-label">
+                            <input class="form-check-input" asp-for="Input.RememberMe" />
+                            @Html.DisplayNameFor(m => m.Input.RememberMe)
+                        </label>
+                    </div>
+                </div>
+                <div>
+                    <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Ingresar</button>
+                </div>
+                <div>
+                    <p class="mt-2 mb-2">
+                        <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Registrarse</a>
+                    </p>
+                </div>
+            </form>
+        </section>
+        <section class="mt-2">
+            <h3>Usar servicio externo.</h3>
+            <hr />
+            @{
+                if ((Model.ExternalLogins?.Count ?? 0) == 0)
+                {
+                    <div>
+                        <p>
+                            No hay configurados servicios de autenticación externos.
+                        </p>
+                    </div>
+                }
+                else
+                {
+                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                        <div class="text-center">
+                            <p>
+                                @foreach (var provider in Model.ExternalLogins!)
+                                {
+                                    switch (provider.DisplayName)
+                                    {
+                                        case "Facebook":
+                                            <button type="submit" class="btn btn-primary btn-lg" name="provider" value="@provider.Name" title="Ingresar usando tu cuenta de @provider.DisplayName"><i class="fa-brands fa-facebook"></i>&nbsp&nbsp @provider.DisplayName</button>
+                                            break;
+                                        case "Google":
+                                            <button type="submit" class="btn btn-primary btn-lg" name="provider" value="@provider.Name" title="Ingresar usando tu cuenta de @provider.DisplayName"><i class="fa-brands fa-google"></i>&nbsp&nbsp @provider.DisplayName</button>
+                                            break;
+                                        default:
+                                            <button type="submit" class="btn btn-primary btn-lg" name="provider" value="@provider.Name" title="Ingresar usando tu cuenta de @provider.DisplayName">@provider.DisplayName</button>
+                                            break;
+                                    }
+                                }
+                            </p>
+                        </div>
+                    </form>
+                }
+            }
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
