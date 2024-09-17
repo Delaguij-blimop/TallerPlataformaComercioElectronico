@@ -74,7 +74,7 @@ function GetProducts(_categoryId) {
                             $("<div>").addClass("card-footer p-4 pt-0 border-top-0 bg-transparent").append(
                                 $("<div>").addClass("d-grid d-md-grid gap-2 d-md-block align-items-center text-center").append(
                                     $("<button>").addClass("btn btn-outline-dark mt-auto btn-detalle").text("Ver Detalle").attr({ "data-elemento": JSON.stringify(item) }),
-                                    $("<button>").addClass("btn btn-outline-dark mt-auto btn-agregar-carrito").data("productId", item.id).text("Agregar al carrito")
+                                    $("<button>").addClass("btn btn-outline-dark mt-auto btn-agregar-carrito").data("productid", item.id).text("Agregar al carrito")
                                 )
                             )
                         )
