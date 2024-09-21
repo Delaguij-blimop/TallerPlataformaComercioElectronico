@@ -14,6 +14,9 @@ namespace TallerPlataformaComercioElectronico.Repositories
             return await _context.Orders
                 .Where(o => o.UserName == userName)
                 .Include(x => x.Detail)
+                .Include(x => x.Payments)
+                .Include("Detail.Product")
+                .Include("Detail.Product.Brand")
                 .ToListAsync();
         }
 
@@ -21,6 +24,7 @@ namespace TallerPlataformaComercioElectronico.Repositories
         {
             return await _context.ShoppingCarts
                 .Where(o => o.UserName == userName)
+                .Where(o => o.IsActive == true)
                 .CountAsync();
         }
 

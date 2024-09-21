@@ -1,4 +1,5 @@
-﻿using TallerPlataformaComercioElectronico.Entities;
+﻿using System.Drawing.Drawing2D;
+using TallerPlataformaComercioElectronico.Entities;
 using TallerPlataformaComercioElectronico.Repositories.Interfaeces;
 using TallerPlataformaComercioElectronico.Services.Interfaces;
 
@@ -61,7 +62,7 @@ namespace TallerPlataformaComercioElectronico.Services
             IEnumerable<ShoppingCart> lst = new List<ShoppingCart>();
             try
             {
-                lst = await _shoppingCartRepository.GetShoppingCartsByUser(userName);
+                lst = await _shoppingCartRepository.GetShoppingCartsByUserAndProduct(userName, productId);
             }
             catch (Exception ex)
             {
@@ -70,14 +71,12 @@ namespace TallerPlataformaComercioElectronico.Services
             return lst;
         }
 
-
-        public async Task<bool> Delete(int idCarrito, int idProducto)
+        public async Task<bool> Delete(int shoppingCartId)
         {
-
             bool response = true;
             try
             {
-                await _shoppingCartRepository.DeleteAsync(idCarrito);
+                await _shoppingCartRepository.DeleteAsync(shoppingCartId);
                 await _shoppingCartRepository.SaveAsync();
             }
             catch (Exception ex)
@@ -99,6 +98,45 @@ namespace TallerPlataformaComercioElectronico.Services
                 ordersList = new List<Order>();
             }
             return ordersList;
+        }
+
+        public async Task<bool> ExistsProductInShoppingCart(int productId, string userName)
+        {
+            var cart = await GetShoppingCartsByUserAndProduct(userName, productId);
+            return cart.Any();
+        }
+
+        public async Task<ShoppingCart> GetById(int shoppingCartId)
+        {
+            ShoppingCart response = new ShoppingCart();
+            try
+            {
+                response = await _shoppingCartRepository.GetByIdAsync(shoppingCartId);
+            }
+            catch (Exception ex)
+            {
+                response = new ShoppingCart();
+            }
+            return response;
+        }
+
+        public async Task<bool> UpdateQuantity(ShoppingCart shoppingCart)
+        {
+            bool response = true;
+            try
+            {
+                ShoppingCart cartToUpdate = await _shoppingCartRepository.GetByIdAsync(shoppingCart.Id);
+
+                cartToUpdate.Quantity = shoppingCart.Quantity;
+
+                await _shoppingCartRepository.UpdateAsync(cartToUpdate);
+                await _shoppingCartRepository.SaveAsync();
+            }
+            catch (Exception ex)
+            {
+                response = false;
+            }
+            return response;
         }
     }
 }

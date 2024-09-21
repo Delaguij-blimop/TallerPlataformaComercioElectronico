@@ -15,7 +15,7 @@ namespace TallerPlataformaComercioElectronico.Data.Configuration
             builder.Property(x => x.IsActive).HasDefaultValue(true);
 
             builder.HasOne(t => t.Product).WithMany(m => m.Carts).HasForeignKey(t => t.ProductId);
-
+            builder.HasOne(t => t.Order).WithMany(m => m.Carts).HasForeignKey(t => t.OrderId);
         }
     }
 }

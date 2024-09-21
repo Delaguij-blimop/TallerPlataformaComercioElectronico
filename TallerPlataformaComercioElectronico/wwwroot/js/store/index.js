@@ -27,10 +27,11 @@
             $(".modal-body").LoadingOverlay("show");
         }
     });
-    $('#exampleModal').modal('show');
+    $('#filterCategoryModal').modal('show');
 });
 
 $(document).ready(function () {
+    $(".btn-ver-categoria").show();
     GetProducts(0);
 })
 
@@ -40,7 +41,7 @@ $(document).on('click', '.btn-detalle', function (event) {
 });
 
 $(document).on('click', '.btn-categoria', function (event) {
-    $('#exampleModal').modal('hide');
+    $('#filterCategoryModal').modal('hide');
 });
 
 function GetProducts(_categoryId) {

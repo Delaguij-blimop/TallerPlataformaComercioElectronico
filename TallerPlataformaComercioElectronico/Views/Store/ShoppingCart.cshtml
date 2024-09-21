@@ -7,58 +7,33 @@
     <div class="card">
         <div class="card-body">
             <div class="row">
-                <div class="col-md-8">
+                <div class="col-md-7 offset-1">
                     <div class="product-details mr-2">
                         <div class="d-flex justify-content-between">
-                            <span class="ml-2">Detalle Compra</span>
-                            <a class="btn btn-danger" href="@Url.Action("Index","Store")">Seguir comprando</a>
+                            <span class="ml-2">Productos</span>
+                            <a class="btn btn-primary" href="@Url.Action("Index","Store")"><i class="fa-brands fa-opencart"></i>&nbsp; Agregar más productos al carrito</a>
                         </div>
                         <hr class="mt-2 mb-2">
-                        <div class="justify-content-start mb-2">
-                            Tienes <span id="cantidad-articulos" class="ml-1">0</span> artículo(s) en tu carrito
-                        </div>
                         <div id="productos-seleccionados">
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="card bg-light">
                         <div class="card-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Datos de Envío</h5>
+                            <h5 class="modal-title">Resumen Compra</h5>
                         </div>
                         <div class="card-body">
-                            <form>
-                                <div class="mb-1">
-                                    <label for="recipient-name" class="col-form-label pt-0">País:</label>
-                                    <select id="cboPais" class="form-select control-validar"></select>
-                                </div>
-                                <div class="mb-1">
-                                    <label for="recipient-name" class="col-form-label">Estado:</label>
-                                    <select id="cboEstado" class="form-select control-validar"></select>
-                                </div>
-                                <div class="mb-1">
-                                    <label for="recipient-name" class="col-form-label">Ciudad:</label>
-                                    <select id="cboCiudad" class="form-select control-validar"></select>
-                                </div>
-                                <div class="mb-1">
-                                    <label for="message-text" class="col-form-label">Direccion:</label>
-                                    <input type="text" class="form-control control-validar" autocomplete="off" id="txtDireccion">
-                                </div>
-                                <div class="mb-1">
-                                    <label for="message-text" class="col-form-label">Contacto:</label>
-                                    <input type="text" class="form-control control-validar" autocomplete="off" id="txtContacto">
-                                </div>
-                                <div class="mb-1">
-                                    <label for="message-text" class="col-form-label">Telefono:</label>
-                                    <input type="text" class="form-control control-validar" autocomplete="off" id="txtTelefono">
-                                </div>
-                            </form>
+                            <div class="justify-content-start mb-1">
+                                Tienes <span id="cantidad-articulos" class="ml-1">0</span> artículo(s) en tu carrito
+                            </div>
                         </div>
                         <div class="card-footer">
-                            <button class="btn btn-primary btn-block mt-3" id="btnProcesarPago" type="button">Procesar Pago</button>
+                            <div class="d-flex justify-content-between information"><span>Total a Pagar</span><span id="totalPagar">$ 0</span></div>
+                            <hr class="line">
+                            <button class="btn btn-primary mt-1 mb-2" id="btnConfirmarCompra" type="button">Comprar</button>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -66,61 +41,9 @@
 </div>
 
 <!--MODAL-->
-<div class="modal fade" id="mdprocesopago" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Procesar Pago</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="card bg-light">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="payment-info">
-                                    <div class="d-flex justify-content-between align-items-center"><span>Datos de pago</span></div>
-                                    <hr />
-                                    <span class="type d-block mt-3 mb-1">Método de Pago</span>
-                                    <label class="radio"> <input type="radio" name="card" id="cash" value="payment" checked> <span><img width="60" src="@Url.Content("~/Images/PaymentMethods/efectivo.jpg")" /></span> </label>
-                                    <label class="radio ml-2"> <input type="radio" name="card" id="visa" value="payment"> <span><img width="60" src="@Url.Content("~/Images/PaymentMethods/visa.png")" /></span> </label>
-                                    <label class="radio ml-2"> <input type="radio" name="card" id="master" value="payment"> <span><img width="60" src="@Url.Content("~/Images/PaymentMethods/master.png")" /></span> </label>
-                                    <label class="radio ml-2"> <input type="radio" name="card" id="mpago" value="payment"> <span><img width="60" src="@Url.Content("~/Images/PaymentMethods/mercadopago.png")" /></span> </label>
-                                    <label class="radio ml-2"> <input type="radio" name="card" id="pfacil" value="payment"> <span><img width="60" src="@Url.Content("~/Images/PaymentMethods/pagofacil.png")" /></span> </label>
-                                    <div>
-                                        <label class="credit-card-label mb-1 mt-2">Nombre del Titular</label>
-                                        <input type="text" class="form-control credit-inputs" placeholder="Nombre" id="trj_nombre">
-                                    </div>
-                                    <div>
-                                        <label class="credit-card-label mb-1 mt-2">Número de tarjeta</label>
-                                        <input type="text" class="form-control credit-inputs" placeholder="0000 0000 0000 0000" id="trj_numero">
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <label class="credit-card-label mb-1 mt-2">Vigencia</label>
-                                            <input type="text" class="form-control credit-inputs" placeholder="12/24" id="trj_vigencia">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="credit-card-label mb-1 mt-2">CVV</label>
-                                            <input type="text" class="form-control credit-inputs" placeholder="342" id="trj_cvv">
-                                        </div>
-                                    </div>
-                                    <hr class="line">
-                                    <div class="d-flex justify-content-between information"><span>Total a Pagar</span><span id="totalPagar">$ 0</span></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Regresar</button>
-                <button type="button" class="btn btn-success" id="btnConfirmarCompra">Confirmar Compra</button>
-            </div>
-        </div>
-    </div>
-</div>
+@Html.Partial("_ModalPayment")
 
 @section scripts {
     <script src="~/js/store/shoppingcart.js"></script>
+    <script src="~/js/store/payment.js"></script>
 }

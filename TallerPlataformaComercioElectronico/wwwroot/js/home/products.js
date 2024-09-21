@@ -83,12 +83,9 @@ function abrirModal(json) {
 }
 
 $(document).on('click', '.btn-eliminar', function (event) {
-    var json = $(this).data("informacion")
-    let formData = {
-        id: json.id
-    }
-
-    if (confirm('¿Esta seguro de eliminar?')) {
+    if (confirm('¿Esta seguro de eliminar el producto?')) {
+        var json = $(this).data("informacion")
+        let formData = { id: json.id }
         jQuery.ajax({
             url: '/Home/DeleteProduct',
             type: "POST",
@@ -103,15 +100,9 @@ $(document).on('click', '.btn-eliminar', function (event) {
             },
             error: function (error) {
                 console.log(error)
-            },
-            beforeSend: function () {
-
-            },
+            }
         });
-    } else {
-
     }
-
 });
 
 $(document).on('click', '#btnSubmit', function (event) {

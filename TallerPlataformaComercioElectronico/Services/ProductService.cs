@@ -129,7 +129,7 @@ namespace TallerPlataformaComercioElectronico.Services
 
         }
 
-        public async Task<int> GetStockAvailable(int id)
+        public async Task<int> GetProductStock(int id)
         {
             Product product = new Product();
             try
@@ -142,5 +142,6 @@ namespace TallerPlataformaComercioElectronico.Services
             }
             return product.Stock;
         }
+
     }
 }

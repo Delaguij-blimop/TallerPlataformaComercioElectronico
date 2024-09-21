@@ -14,10 +14,13 @@ namespace TallerPlataformaComercioElectronico.Data.Configuration
             builder.Property(x => x.CardNumber).HasMaxLength(20);
             builder.Property(x => x.CardHolderName).HasMaxLength(100);
             builder.Property(x => x.CVV).HasMaxLength(10);
+            builder.Property(x => x.TransactionId).HasMaxLength(12);
+            builder.Property(x => x.Correo).HasMaxLength(100);
             builder.Property(x => x.Amount).HasPrecision(18, 2).HasDefaultValue(0);
 
             builder.HasOne(t => t.Order).WithMany(m => m.Payments).HasForeignKey(t => t.OrderId);
-            builder.HasOne(t => t.PaymentType).WithMany(m => m.Payments).HasForeignKey(t => t.PaymentTypeId);
+            builder.HasOne(t => t.PaymentMethod).WithMany(m => m.Payments).HasForeignKey(t => t.PaymentMethodId);
+            builder.HasOne(t => t.BillingAddress).WithMany(m => m.Payments).HasForeignKey(t => t.BillingAddressId);
         }
     }
 }

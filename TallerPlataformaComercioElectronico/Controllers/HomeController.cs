@@ -170,8 +170,7 @@ namespace TallerPlataformaComercioElectronico.Controllers
         [HttpPost]
         public async Task<JsonResult> SaveProduct(string oProduct, IFormFile imageFile)
         {
-            GenericResponse response = new GenericResponse() { Result = true, Message = "" };
-
+            ApiResponse response = new ApiResponse();
             try
             {
                 Product product = new Product();
@@ -185,11 +184,11 @@ namespace TallerPlataformaComercioElectronico.Controllers
                 if (product.Id == 0)
                 {
                     await _productService.Insert(product);
-                    response.Result = product.Id == 0 ? false : true;
+                    response.Succeded = product.Id == 0 ? false : true;
                 }
                 else
                 {
-                    response.Result = await _productService.Update(product);
+                    response.Succeded = await _productService.Update(product);
                 }
 
                 if (product.Id != 0 && imageFile != null && imageFile.Length > 0)
@@ -202,12 +201,12 @@ namespace TallerPlataformaComercioElectronico.Controllers
                     {
                         imageFile.CopyTo(fileStream);
                     }
-                    response.Result = await _productService.UpdateImagePath(product);
+                    response.Succeded = await _productService.UpdateImagePath(product);
                 }
             }
             catch (Exception e)
             {
-                response.Result = false;
+                response.Succeded = false;
                 response.Message = e.Message;
             }
 

@@ -4,7 +4,7 @@ namespace TallerPlataformaComercioElectronico.Entities
 {
     public class ApplicationUser : IdentityUser
     {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public bool FraudReport { get; set; }
+        public bool IsAdmin { get; set; }
     }
 }

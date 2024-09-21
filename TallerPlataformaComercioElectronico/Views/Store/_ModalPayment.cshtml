@@ -1,0 +1,94 @@
+﻿<div class="modal fade" id="mdprocesopago" data-bs-backdrop="static" tabindex="-1" aria-labelledby="procesoPagoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="procesoPagoModalLabel">Procesar Pago</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card bg-light">
+                                <div class="card-header">
+                                    <h5 class="modal-title">Dirección de Facturación</h5>
+                                </div>
+                                <div class="card-body" id="datosDireccion">
+                                    <div class="mb-1">
+                                        <label for="message-text" class="col-form-label">Nombre o Razón Social:</label>
+                                        <input type="text" class="form-control control-validar" autocomplete="off" id="txtRazonSocial">
+                                    </div>
+                                    <div class="mb-1">
+                                        <label for="recipient-name" class="col-form-label pt-0">País:</label>
+                                        <select id="cboPais" class="form-select control-validar"></select>
+                                    </div>
+                                    <div class="mb-1">
+                                        <label for="recipient-name" class="col-form-label">Estado:</label>
+                                        <select id="cboEstado" class="form-select control-validar"></select>
+                                    </div>
+                                    <div class="mb-1">
+                                        <label for="recipient-name" class="col-form-label">Ciudad:</label>
+                                        <select id="cboCiudad" class="form-select control-validar"></select>
+                                    </div>
+                                    <div class="mb-1">
+                                        <label for="message-text" class="col-form-label">Direccion:</label>
+                                        <input type="text" class="form-control control-validar" autocomplete="off" id="txtDireccion">
+                                    </div>
+                                    <div class="mb-1">
+                                        <label for="message-text" class="col-form-label">Código Postal:</label>
+                                        <input type="text" class="form-control control-validar" autocomplete="off" id="txtCodigoPostal">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card bg-light">
+                                <div class="card-header">
+                                    <h5 class="modal-title">Datos de Pago</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="payment-info">
+                                        <span class="type d-block mt-3 mb-1">Método de Pago</span>
+                                        <label class="radio"> <input type="radio" name="paymentMethodType" id="creditCard" value="1" checked> <span><img width="60" src="@Url.Content("~/Images/PaymentMethods/CreditCard.png")" /></span> </label>
+                                        <label class="radio ml-2"> <input type="radio" name="paymentMethodType" id="payPal" value="2"> <span><img width="60" src="@Url.Content("~/Images/PaymentMethods/PayPal.jpg")" /></span> </label>
+                                        <div id="datosTarjeta">
+                                            <div>
+                                                <label class="credit-card-label mb-1 mt-2">Nombre del Titular</label>
+                                                <input type="text" class="form-control control-validar" placeholder="Nombre" id="trj_nombre">
+                                            </div>
+                                            <div>
+                                                <label class="credit-card-label mb-1 mt-2">Número de tarjeta</label>
+                                                <input type="text" class="form-control control-validar" placeholder="0000-0000-0000-0000" id="trj_numero">
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label class="credit-card-label mb-1 mt-2">Vigencia</label>
+                                                    <input type="text" class="form-control control-validar" placeholder="12/24" id="trj_vigencia">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="credit-card-label mb-1 mt-2">CVV</label>
+                                                    <input type="text" class="form-control control-validar" placeholder="342" id="trj_cvv">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="datosPaypal">
+                                            <div>
+                                                <label class="credit-card-label mb-1 mt-2">Correo electrónico</label>
+                                                <input type="text" class="form-control control-validar" placeholder="name@email.com" id="ppal_correo">
+                                            </div>
+                                        </div>
+                                        <hr class="line">
+                                        <div class="d-flex justify-content-between information"><span>Total a Pagar</span><span id="totalaPagar">$ 0</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="btnProcesarPago">Pagar</button>
+            </div>
+        </div>
+    </div>
+</div>

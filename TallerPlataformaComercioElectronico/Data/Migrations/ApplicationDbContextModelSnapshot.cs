@@ -86,6 +86,10 @@ namespace TallerPlataformaComercioElectronico.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -137,6 +141,8 @@ namespace TallerPlataformaComercioElectronico.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -224,7 +230,7 @@ namespace TallerPlataformaComercioElectronico.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("TallerPlataformaComercioElectronico.Entities.BillingAddress", b =>
+            modelBuilder.Entity("TallerPlataformaComercioElectronico.Entities.Address", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -235,6 +241,10 @@ namespace TallerPlataformaComercioElectronico.Migrations
                     b.Property<int>("CityId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Name")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<string>("PostalCode")
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
@@ -243,11 +253,14 @@ namespace TallerPlataformaComercioElectronico.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<int?>("Type")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CityId");
 
-                    b.ToTable("BillingAddresses", (string)null);
+                    b.ToTable("Addresses", (string)null);
                 });
 
             modelBuilder.Entity("TallerPlataformaComercioElectronico.Entities.Brand", b =>
@@ -270,6 +283,146 @@ namespace TallerPlataformaComercioElectronico.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Brands", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "SONY",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "HP",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "LG",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "HYUNDAI",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Description = "CANON",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Description = "ROBERTA ALLEN",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Description = "MICA",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Description = "FORLI",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Description = "BE CRAFTY",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Description = "ADIDAS",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Description = "BEST",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Description = "REEBOK",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Description = "FOSSIL",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Description = "BILLABONG",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Description = "POWCO",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Description = "HOT WHEELS",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Description = "LEGO",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 18,
+                            Description = "SAMSUNG",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 19,
+                            Description = "RECCO",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 20,
+                            Description = "INDURAMA",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 21,
+                            Description = "ALFANO",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 22,
+                            Description = "MABE",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 23,
+                            Description = "ELECTROLUX",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        });
                 });
 
             modelBuilder.Entity("TallerPlataformaComercioElectronico.Entities.Category", b =>
@@ -292,6 +445,56 @@ namespace TallerPlataformaComercioElectronico.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Tecnología",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Muebles",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Dormitorio",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "Deportes",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Description = "Zapatos",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Description = "Accesorios",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Description = "Juguetería",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Description = "Electrohogar",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        });
                 });
 
             modelBuilder.Entity("TallerPlataformaComercioElectronico.Entities.City", b =>
@@ -319,6 +522,337 @@ namespace TallerPlataformaComercioElectronico.Migrations
                     b.HasIndex("StateId");
 
                     b.ToTable("Cities", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "La Plata",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Mar del Plata",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "San Fernando del Valle de Catamarca",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 2
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "Belén",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 2
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Description = "Resistencia",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 3
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Description = "Presidencia Roque Sáenz Peña",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 3
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Description = "Rawson",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 4
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Description = "Comodoro Rivadavia",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 4
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Description = "Córdoba",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 5
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Description = "Villa Carlos Paz",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 5
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Description = "Corrientes",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 6
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Description = "Goya",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 6
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Description = "Paraná",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 7
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Description = "Concordia",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 7
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Description = "Formosa",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 8
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Description = "Clorinda",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 8
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Description = "San Salvador de Jujuy",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 9
+                        },
+                        new
+                        {
+                            Id = 18,
+                            Description = "Palpalá",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 9
+                        },
+                        new
+                        {
+                            Id = 19,
+                            Description = "Santa Rosa",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 10
+                        },
+                        new
+                        {
+                            Id = 20,
+                            Description = "General Pico",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 10
+                        },
+                        new
+                        {
+                            Id = 21,
+                            Description = "La Rioja",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 11
+                        },
+                        new
+                        {
+                            Id = 22,
+                            Description = "Chilecito",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 11
+                        },
+                        new
+                        {
+                            Id = 23,
+                            Description = "Mendoza",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 12
+                        },
+                        new
+                        {
+                            Id = 24,
+                            Description = "San Rafael",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 12
+                        },
+                        new
+                        {
+                            Id = 25,
+                            Description = "Posadas",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 13
+                        },
+                        new
+                        {
+                            Id = 26,
+                            Description = "Oberá",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 13
+                        },
+                        new
+                        {
+                            Id = 27,
+                            Description = "Neuquén",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 14
+                        },
+                        new
+                        {
+                            Id = 28,
+                            Description = "San Martín de los Andes",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 14
+                        },
+                        new
+                        {
+                            Id = 29,
+                            Description = "Viedma",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 15
+                        },
+                        new
+                        {
+                            Id = 30,
+                            Description = "San Carlos de Bariloche",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 15
+                        },
+                        new
+                        {
+                            Id = 31,
+                            Description = "Salta",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 16
+                        },
+                        new
+                        {
+                            Id = 32,
+                            Description = "Tartagal",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 16
+                        },
+                        new
+                        {
+                            Id = 33,
+                            Description = "San Juan",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 17
+                        },
+                        new
+                        {
+                            Id = 34,
+                            Description = "Caucete",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 17
+                        },
+                        new
+                        {
+                            Id = 35,
+                            Description = "San Luis",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 18
+                        },
+                        new
+                        {
+                            Id = 36,
+                            Description = "Villa Mercedes",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 18
+                        },
+                        new
+                        {
+                            Id = 37,
+                            Description = "Río Gallegos",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 19
+                        },
+                        new
+                        {
+                            Id = 38,
+                            Description = "Caleta Olivia",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 19
+                        },
+                        new
+                        {
+                            Id = 39,
+                            Description = "Santa Fe",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 20
+                        },
+                        new
+                        {
+                            Id = 40,
+                            Description = "Rosario",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 20
+                        },
+                        new
+                        {
+                            Id = 41,
+                            Description = "Santiago del Estero",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 21
+                        },
+                        new
+                        {
+                            Id = 42,
+                            Description = "La Banda",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 21
+                        },
+                        new
+                        {
+                            Id = 43,
+                            Description = "Ushuaia",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 22
+                        },
+                        new
+                        {
+                            Id = 44,
+                            Description = "Río Grande",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 22
+                        },
+                        new
+                        {
+                            Id = 45,
+                            Description = "San Miguel de Tucumán",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 23
+                        },
+                        new
+                        {
+                            Id = 46,
+                            Description = "Tafí Viejo",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 23
+                        },
+                        new
+                        {
+                            Id = 47,
+                            Description = "Buenos Aires",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            StateId = 24
+                        });
                 });
 
             modelBuilder.Entity("TallerPlataformaComercioElectronico.Entities.Country", b =>
@@ -341,6 +875,14 @@ namespace TallerPlataformaComercioElectronico.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Countries", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Argentina",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        });
                 });
 
             modelBuilder.Entity("TallerPlataformaComercioElectronico.Entities.Currency", b =>
@@ -350,6 +892,10 @@ namespace TallerPlataformaComercioElectronico.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("CodigoISO")
+                        .HasMaxLength(3)
+                        .HasColumnType("nvarchar(3)");
 
                     b.Property<string>("Description")
                         .HasMaxLength(100)
@@ -363,6 +909,22 @@ namespace TallerPlataformaComercioElectronico.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Currency", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CodigoISO = "ARS",
+                            Description = "Peso Argentino",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CodigoISO = "USD",
+                            Description = "Dolar",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        });
                 });
 
             modelBuilder.Entity("TallerPlataformaComercioElectronico.Entities.Order", b =>
@@ -373,13 +935,6 @@ namespace TallerPlataformaComercioElectronico.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("BillingAddressId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Contact")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
                     b.Property<int>("CurrencyId")
                         .HasColumnType("int");
 
@@ -387,10 +942,6 @@ namespace TallerPlataformaComercioElectronico.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getutcdate()");
-
-                    b.Property<string>("Phone")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
 
                     b.Property<decimal>("TotalAmount")
                         .ValueGeneratedOnAdd()
@@ -405,8 +956,6 @@ namespace TallerPlataformaComercioElectronico.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("BillingAddressId");
 
                     b.HasIndex("CurrencyId");
 
@@ -459,6 +1008,9 @@ namespace TallerPlataformaComercioElectronico.Migrations
                         .HasColumnType("decimal(18,2)")
                         .HasDefaultValue(0m);
 
+                    b.Property<int>("BillingAddressId")
+                        .HasColumnType("int");
+
                     b.Property<string>("CVV")
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
@@ -471,25 +1023,35 @@ namespace TallerPlataformaComercioElectronico.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<DateTime>("ExpirationDate")
+                    b.Property<string>("Correo")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime?>("ExpirationDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
-                    b.Property<int>("PaymentTypeId")
+                    b.Property<int>("PaymentMethodId")
                         .HasColumnType("int");
+
+                    b.Property<string>("TransactionId")
+                        .HasMaxLength(12)
+                        .HasColumnType("nvarchar(12)");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BillingAddressId");
+
                     b.HasIndex("OrderId");
 
-                    b.HasIndex("PaymentTypeId");
+                    b.HasIndex("PaymentMethodId");
 
                     b.ToTable("Payments", (string)null);
                 });
 
-            modelBuilder.Entity("TallerPlataformaComercioElectronico.Entities.PaymentType", b =>
+            modelBuilder.Entity("TallerPlataformaComercioElectronico.Entities.PaymentMethod", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -501,6 +1063,10 @@ namespace TallerPlataformaComercioElectronico.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("ImagePath")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
                     b.Property<DateTime>("RegisterDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -508,7 +1074,23 @@ namespace TallerPlataformaComercioElectronico.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PaymentTypes", (string)null);
+                    b.ToTable("PaymentMethods", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Tarjeta de Crédito",
+                            ImagePath = "C:\\Users\\eblim\\source\\repos\\TallerPlataformaComercioElectronico\\TallerPlataformaComercioElectronico\\wwwroot\\Images\\PaymentMethods\\CreditCardIcon.png",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "PayPal",
+                            ImagePath = "C:\\Users\\eblim\\source\\repos\\TallerPlataformaComercioElectronico\\TallerPlataformaComercioElectronico\\wwwroot\\Images\\PaymentMethods\\PayPalIcon.jpg",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        });
                 });
 
             modelBuilder.Entity("TallerPlataformaComercioElectronico.Entities.Product", b =>
@@ -554,6 +1136,294 @@ namespace TallerPlataformaComercioElectronico.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Products", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            BrandId = 1,
+                            CategoryId = 1,
+                            Description = "Consola de PS4 Pro 1TB Negro",
+                            ImagePath = "C:\\Users\\eblim\\source\\repos\\TallerPlataformaComercioElectronico\\TallerPlataformaComercioElectronico\\wwwroot\\Images\\Products\\1.jpg",
+                            Price = 2000m,
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            Stock = 50
+                        },
+                        new
+                        {
+                            Id = 2,
+                            BrandId = 2,
+                            CategoryId = 1,
+                            Description = "HP Laptop 15-EF1019LA",
+                            ImagePath = "C:\\Users\\eblim\\source\\repos\\TallerPlataformaComercioElectronico\\TallerPlataformaComercioElectronico\\wwwroot\\Images\\Products\\2.jpg",
+                            Price = 2500m,
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            Stock = 60
+                        },
+                        new
+                        {
+                            Id = 3,
+                            BrandId = 3,
+                            CategoryId = 1,
+                            Description = "Televisor 65 4K Ultra HD Smart 65UN710",
+                            ImagePath = "C:\\Users\\eblim\\source\\repos\\TallerPlataformaComercioElectronico\\TallerPlataformaComercioElectronico\\wwwroot\\Images\\Products\\3.jpg",
+                            Price = 3000m,
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            Stock = 120
+                        },
+                        new
+                        {
+                            Id = 4,
+                            BrandId = 4,
+                            CategoryId = 1,
+                            Description = "Televisor 50 4K Ultra HD Smart Android",
+                            ImagePath = "C:\\Users\\eblim\\source\\repos\\TallerPlataformaComercioElectronico\\TallerPlataformaComercioElectronico\\wwwroot\\Images\\Products\\4.jpg",
+                            Price = 3200m,
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            Stock = 70
+                        },
+                        new
+                        {
+                            Id = 5,
+                            BrandId = 5,
+                            CategoryId = 1,
+                            Description = "Cámara Reflex EOS Rebel T100",
+                            ImagePath = "C:\\Users\\eblim\\source\\repos\\TallerPlataformaComercioElectronico\\TallerPlataformaComercioElectronico\\wwwroot\\Images\\Products\\5.jpg",
+                            Price = 1560m,
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            Stock = 90
+                        },
+                        new
+                        {
+                            Id = 6,
+                            BrandId = 6,
+                            CategoryId = 2,
+                            Description = "Aparador Surat",
+                            ImagePath = "C:\\Users\\eblim\\source\\repos\\TallerPlataformaComercioElectronico\\TallerPlataformaComercioElectronico\\wwwroot\\Images\\Products\\6.jpg",
+                            Price = 500m,
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            Stock = 60
+                        },
+                        new
+                        {
+                            Id = 7,
+                            BrandId = 7,
+                            CategoryId = 2,
+                            Description = "Mesa de Comedor Donatello",
+                            ImagePath = "C:\\Users\\eblim\\source\\repos\\TallerPlataformaComercioElectronico\\TallerPlataformaComercioElectronico\\wwwroot\\Images\\Products\\7.jpg",
+                            Price = 400m,
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            Stock = 90
+                        },
+                        new
+                        {
+                            Id = 8,
+                            BrandId = 8,
+                            CategoryId = 3,
+                            Description = "Colchón Polaris 1 Plz + 1 Almohada",
+                            ImagePath = "C:\\Users\\eblim\\source\\repos\\TallerPlataformaComercioElectronico\\TallerPlataformaComercioElectronico\\wwwroot\\Images\\Products\\8.jpg",
+                            Price = 500m,
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            Stock = 120
+                        },
+                        new
+                        {
+                            Id = 9,
+                            BrandId = 6,
+                            CategoryId = 3,
+                            Description = "Juegos de Sábanas 180 Hilos Solid",
+                            ImagePath = "C:\\Users\\eblim\\source\\repos\\TallerPlataformaComercioElectronico\\TallerPlataformaComercioElectronico\\wwwroot\\Images\\Products\\9.jpg",
+                            Price = 200m,
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            Stock = 130
+                        },
+                        new
+                        {
+                            Id = 10,
+                            BrandId = 7,
+                            CategoryId = 3,
+                            Description = "Tocador Franca",
+                            ImagePath = "C:\\Users\\eblim\\source\\repos\\TallerPlataformaComercioElectronico\\TallerPlataformaComercioElectronico\\wwwroot\\Images\\Products\\10.jpg",
+                            Price = 450m,
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            Stock = 60
+                        },
+                        new
+                        {
+                            Id = 11,
+                            BrandId = 9,
+                            CategoryId = 3,
+                            Description = "Alfombra Infantil de Osa Melange",
+                            ImagePath = "C:\\Users\\eblim\\source\\repos\\TallerPlataformaComercioElectronico\\TallerPlataformaComercioElectronico\\wwwroot\\Images\\Products\\11.jpg",
+                            Price = 120m,
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            Stock = 50
+                        },
+                        new
+                        {
+                            Id = 12,
+                            BrandId = 10,
+                            CategoryId = 4,
+                            Description = "Mochila Unisex Deportivo Classic",
+                            ImagePath = "C:\\Users\\eblim\\source\\repos\\TallerPlataformaComercioElectronico\\TallerPlataformaComercioElectronico\\wwwroot\\Images\\Products\\12.jpg",
+                            Price = 220m,
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            Stock = 45
+                        },
+                        new
+                        {
+                            Id = 13,
+                            BrandId = 11,
+                            CategoryId = 4,
+                            Description = "Bicicleta de Montaña Best Inka 29 Roja",
+                            ImagePath = "C:\\Users\\eblim\\source\\repos\\TallerPlataformaComercioElectronico\\TallerPlataformaComercioElectronico\\wwwroot\\Images\\Products\\13.jpg",
+                            Price = 890m,
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            Stock = 75
+                        },
+                        new
+                        {
+                            Id = 14,
+                            BrandId = 10,
+                            CategoryId = 5,
+                            Description = "Zapatillas Urbanas Mujer adidas",
+                            ImagePath = "C:\\Users\\eblim\\source\\repos\\TallerPlataformaComercioElectronico\\TallerPlataformaComercioElectronico\\wwwroot\\Images\\Products\\14.jpg",
+                            Price = 260m,
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            Stock = 80
+                        },
+                        new
+                        {
+                            Id = 15,
+                            BrandId = 12,
+                            CategoryId = 5,
+                            Description = "Zapatillas Training Hombre Rebook",
+                            ImagePath = "C:\\Users\\eblim\\source\\repos\\TallerPlataformaComercioElectronico\\TallerPlataformaComercioElectronico\\wwwroot\\Images\\Products\\15.jpg",
+                            Price = 230m,
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            Stock = 38
+                        },
+                        new
+                        {
+                            Id = 16,
+                            BrandId = 13,
+                            CategoryId = 6,
+                            Description = "Reloj",
+                            ImagePath = "C:\\Users\\eblim\\source\\repos\\TallerPlataformaComercioElectronico\\TallerPlataformaComercioElectronico\\wwwroot\\Images\\Products\\16.jpg",
+                            Price = 300m,
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            Stock = 20
+                        },
+                        new
+                        {
+                            Id = 17,
+                            BrandId = 14,
+                            CategoryId = 6,
+                            Description = "Billetera Hombre",
+                            ImagePath = "C:\\Users\\eblim\\source\\repos\\TallerPlataformaComercioElectronico\\TallerPlataformaComercioElectronico\\wwwroot\\Images\\Products\\17.jpg",
+                            Price = 87m,
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            Stock = 88
+                        },
+                        new
+                        {
+                            Id = 18,
+                            BrandId = 15,
+                            CategoryId = 7,
+                            Description = "Auto Deportivo 45 cm Naranja",
+                            ImagePath = "C:\\Users\\eblim\\source\\repos\\TallerPlataformaComercioElectronico\\TallerPlataformaComercioElectronico\\wwwroot\\Images\\Products\\18.jpg",
+                            Price = 90m,
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            Stock = 55
+                        },
+                        new
+                        {
+                            Id = 19,
+                            BrandId = 16,
+                            CategoryId = 7,
+                            Description = "Set de Juego Hot Wheels",
+                            ImagePath = "C:\\Users\\eblim\\source\\repos\\TallerPlataformaComercioElectronico\\TallerPlataformaComercioElectronico\\wwwroot\\Images\\Products\\19.jpg",
+                            Price = 130m,
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            Stock = 70
+                        },
+                        new
+                        {
+                            Id = 20,
+                            BrandId = 17,
+                            CategoryId = 7,
+                            Description = "Set Lego Classic: Maletín Creativo",
+                            ImagePath = "C:\\Users\\eblim\\source\\repos\\TallerPlataformaComercioElectronico\\TallerPlataformaComercioElectronico\\wwwroot\\Images\\Products\\20.jpg",
+                            Price = 110m,
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            Stock = 60
+                        },
+                        new
+                        {
+                            Id = 21,
+                            BrandId = 18,
+                            CategoryId = 8,
+                            Description = "Refrigerador Samsung 295 litros",
+                            ImagePath = "C:\\Users\\eblim\\source\\repos\\TallerPlataformaComercioElectronico\\TallerPlataformaComercioElectronico\\wwwroot\\Images\\Products\\21.jpg",
+                            Price = 2100m,
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            Stock = 90
+                        },
+                        new
+                        {
+                            Id = 22,
+                            BrandId = 19,
+                            CategoryId = 8,
+                            Description = "Ventilador 3 En 1",
+                            ImagePath = "C:\\Users\\eblim\\source\\repos\\TallerPlataformaComercioElectronico\\TallerPlataformaComercioElectronico\\wwwroot\\Images\\Products\\22.jpg",
+                            Price = 1100m,
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            Stock = 56
+                        },
+                        new
+                        {
+                            Id = 23,
+                            BrandId = 20,
+                            CategoryId = 8,
+                            Description = "Frigobar 92 Lt Blanco",
+                            ImagePath = "C:\\Users\\eblim\\source\\repos\\TallerPlataformaComercioElectronico\\TallerPlataformaComercioElectronico\\wwwroot\\Images\\Products\\23.jpg",
+                            Price = 940m,
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            Stock = 78
+                        },
+                        new
+                        {
+                            Id = 24,
+                            BrandId = 21,
+                            CategoryId = 8,
+                            Description = "Aire Acondicionado Split",
+                            ImagePath = "C:\\Users\\eblim\\source\\repos\\TallerPlataformaComercioElectronico\\TallerPlataformaComercioElectronico\\wwwroot\\Images\\Products\\24.jpg",
+                            Price = 1700m,
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            Stock = 56
+                        },
+                        new
+                        {
+                            Id = 25,
+                            BrandId = 22,
+                            CategoryId = 8,
+                            Description = "Lavadora Mabe 16kg",
+                            ImagePath = "C:\\Users\\eblim\\source\\repos\\TallerPlataformaComercioElectronico\\TallerPlataformaComercioElectronico\\wwwroot\\Images\\Products\\25.jpg",
+                            Price = 2800m,
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            Stock = 48
+                        },
+                        new
+                        {
+                            Id = 26,
+                            BrandId = 23,
+                            CategoryId = 8,
+                            Description = "Campana Extractora EJSE202",
+                            ImagePath = "C:\\Users\\eblim\\source\\repos\\TallerPlataformaComercioElectronico\\TallerPlataformaComercioElectronico\\wwwroot\\Images\\Products\\26.jpg",
+                            Price = 1500m,
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            Stock = 56
+                        });
                 });
 
             modelBuilder.Entity("TallerPlataformaComercioElectronico.Entities.ShoppingCart", b =>
@@ -569,7 +1439,13 @@ namespace TallerPlataformaComercioElectronico.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValue(true);
 
+                    b.Property<int?>("OrderId")
+                        .HasColumnType("int");
+
                     b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
                         .HasColumnType("int");
 
                     b.Property<string>("UserName")
@@ -577,6 +1453,8 @@ namespace TallerPlataformaComercioElectronico.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
 
                     b.HasIndex("ProductId");
 
@@ -608,6 +1486,209 @@ namespace TallerPlataformaComercioElectronico.Migrations
                     b.HasIndex("CountryId");
 
                     b.ToTable("States", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CountryId = 1,
+                            Description = "Buenos Aires",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CountryId = 1,
+                            Description = "Catamarca",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CountryId = 1,
+                            Description = "Chaco",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CountryId = 1,
+                            Description = "Chubut",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CountryId = 1,
+                            Description = "Córdoba",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CountryId = 1,
+                            Description = "Corrientes",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CountryId = 1,
+                            Description = "Entre Ríos",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 8,
+                            CountryId = 1,
+                            Description = "Formosa",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 9,
+                            CountryId = 1,
+                            Description = "Jujuy",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 10,
+                            CountryId = 1,
+                            Description = "La Pampa",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 11,
+                            CountryId = 1,
+                            Description = "La Rioja",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 12,
+                            CountryId = 1,
+                            Description = "Mendoza",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 13,
+                            CountryId = 1,
+                            Description = "Misiones",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 14,
+                            CountryId = 1,
+                            Description = "Neuquén",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 15,
+                            CountryId = 1,
+                            Description = "Río Negro",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 16,
+                            CountryId = 1,
+                            Description = "Salta",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 17,
+                            CountryId = 1,
+                            Description = "San Juan",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 18,
+                            CountryId = 1,
+                            Description = "San Luis",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 19,
+                            CountryId = 1,
+                            Description = "Santa Cruz",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 20,
+                            CountryId = 1,
+                            Description = "Santa Fe",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 21,
+                            CountryId = 1,
+                            Description = "Santiago del Estero",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 22,
+                            CountryId = 1,
+                            Description = "Tierra del Fuego",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 23,
+                            CountryId = 1,
+                            Description = "Tucumán",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            Id = 24,
+                            CountryId = 1,
+                            Description = "Ciudad Autónoma de Buenos Aires",
+                            RegisterDate = new DateTime(2024, 9, 20, 0, 0, 0, 0, DateTimeKind.Local)
+                        });
+                });
+
+            modelBuilder.Entity("TallerPlataformaComercioElectronico.Entities.ApplicationUser", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
+
+                    b.Property<bool>("FraudReport")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsAdmin")
+                        .HasColumnType("bit");
+
+                    b.HasDiscriminator().HasValue("ApplicationUser");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "46d62ce6-0f46-4c8e-b863-bfbdee69f58f",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "073c407b-dcd0-4039-b2ad-1059ede19e7e",
+                            Email = "admin@carrito.com.ar",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ADMIN@CARRITO.COM.AR",
+                            NormalizedUserName = "ADMIN@CARRITO.COM.AR",
+                            PasswordHash = "AQAAAAEAACcQAAAAEBqKOI75zr0oD8Th8AJyDyEDbV+twvrleq/c/5SczRD+vY2y6ghxghAtNWEWZqg3tw==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "CRNRUGJ7ALBDPBKP6ZTBSL3Q2R7A25YV",
+                            TwoFactorEnabled = false,
+                            UserName = "admin@carrito.com.ar",
+                            FraudReport = false,
+                            IsAdmin = true
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -661,7 +1742,7 @@ namespace TallerPlataformaComercioElectronico.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TallerPlataformaComercioElectronico.Entities.BillingAddress", b =>
+            modelBuilder.Entity("TallerPlataformaComercioElectronico.Entities.Address", b =>
                 {
                     b.HasOne("TallerPlataformaComercioElectronico.Entities.City", "City")
                         .WithMany("BillingAddresses")
@@ -685,19 +1766,11 @@ namespace TallerPlataformaComercioElectronico.Migrations
 
             modelBuilder.Entity("TallerPlataformaComercioElectronico.Entities.Order", b =>
                 {
-                    b.HasOne("TallerPlataformaComercioElectronico.Entities.BillingAddress", "BillingAddress")
-                        .WithMany("Orders")
-                        .HasForeignKey("BillingAddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("TallerPlataformaComercioElectronico.Entities.Currency", "Currency")
                         .WithMany("Orders")
                         .HasForeignKey("CurrencyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("BillingAddress");
 
                     b.Navigation("Currency");
                 });
@@ -723,21 +1796,29 @@ namespace TallerPlataformaComercioElectronico.Migrations
 
             modelBuilder.Entity("TallerPlataformaComercioElectronico.Entities.Payment", b =>
                 {
+                    b.HasOne("TallerPlataformaComercioElectronico.Entities.Address", "BillingAddress")
+                        .WithMany("Payments")
+                        .HasForeignKey("BillingAddressId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("TallerPlataformaComercioElectronico.Entities.Order", "Order")
                         .WithMany("Payments")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TallerPlataformaComercioElectronico.Entities.PaymentType", "PaymentType")
+                    b.HasOne("TallerPlataformaComercioElectronico.Entities.PaymentMethod", "PaymentMethod")
                         .WithMany("Payments")
-                        .HasForeignKey("PaymentTypeId")
+                        .HasForeignKey("PaymentMethodId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("BillingAddress");
+
                     b.Navigation("Order");
 
-                    b.Navigation("PaymentType");
+                    b.Navigation("PaymentMethod");
                 });
 
             modelBuilder.Entity("TallerPlataformaComercioElectronico.Entities.Product", b =>
@@ -761,11 +1842,17 @@ namespace TallerPlataformaComercioElectronico.Migrations
 
             modelBuilder.Entity("TallerPlataformaComercioElectronico.Entities.ShoppingCart", b =>
                 {
+                    b.HasOne("TallerPlataformaComercioElectronico.Entities.Order", "Order")
+                        .WithMany("Carts")
+                        .HasForeignKey("OrderId");
+
                     b.HasOne("TallerPlataformaComercioElectronico.Entities.Product", "Product")
                         .WithMany("Carts")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Order");
 
                     b.Navigation("Product");
                 });
@@ -781,9 +1868,9 @@ namespace TallerPlataformaComercioElectronico.Migrations
                     b.Navigation("Country");
                 });
 
-            modelBuilder.Entity("TallerPlataformaComercioElectronico.Entities.BillingAddress", b =>
+            modelBuilder.Entity("TallerPlataformaComercioElectronico.Entities.Address", b =>
                 {
-                    b.Navigation("Orders");
+                    b.Navigation("Payments");
                 });
 
             modelBuilder.Entity("TallerPlataformaComercioElectronico.Entities.Brand", b =>
@@ -813,12 +1900,14 @@ namespace TallerPlataformaComercioElectronico.Migrations
 
             modelBuilder.Entity("TallerPlataformaComercioElectronico.Entities.Order", b =>
                 {
+                    b.Navigation("Carts");
+
                     b.Navigation("Detail");
 
                     b.Navigation("Payments");
                 });
 
-            modelBuilder.Entity("TallerPlataformaComercioElectronico.Entities.PaymentType", b =>
+            modelBuilder.Entity("TallerPlataformaComercioElectronico.Entities.PaymentMethod", b =>
                 {
                     b.Navigation("Payments");
                 });

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Carrito de Compras</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/sweetalert2/sweetalert2.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/TallerPlataformaComercioElectronico.styles.css" asp-append-version="true" />
     <script src="https://kit.fontawesome.com/8d3db81127.js" crossorigin="anonymous"></script>
@@ -21,38 +22,31 @@
             <!-- Sidebar Toggle-->
             <button class="btn btn-dark btn-ver-categoria" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i> Ver Categorias</button>
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Administrar productos</a>
-                    </li>
-                </ul>
             </div>
 
             <!-- Navbar-->
-            @{
-                <form action="@Url.Action("ShoppingCart","Store")" method="post" class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
-                        <button class="btn btn-close-white" type="submit">
-                            <i class="fas fa-shopping-cart"></i>
-                            <span class="badge bg-dark text-white ms-1 rounded-pill contador-carrito">0</span>
-                        </button>
-                    </form>
-
-                    <ul class="navbar-nav me-2">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="@Url.Action("Index","Store")">Ir a Tienda</a></li>
-                                <li><a class="dropdown-item" href="@Url.Action("Order","Store")">Mis Compras</a></li>
-                                <li><hr class="dropdown-divider" /></li>
-                                <li class="dropdown-item">
-                                    <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                                        <button type="submit" class="nav-link btn btn-link text-dark">Salir</button>
-                                    </form>
-                                </li>
-                            </ul>
+            <form action="@Url.Action("ShoppingCart","Store")" method="post" class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+                <button class="btn btn-close-white" type="submit">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="badge bg-dark text-white ms-1 rounded-pill contador-carrito">0</span>
+                </button>
+            </form>
+            <ul class="navbar-nav me-2">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="@Url.Action("Index","Home")">Administrar Productos</a></li>
+                        <li><a class="dropdown-item" href="@Url.Action("Index","Store")">Ir a Tienda</a></li>
+                        <li><a class="dropdown-item" href="@Url.Action("Order","Store")">Mis Compras</a></li>
+                        <li><hr class="dropdown-divider" /></li>
+                        <li class="dropdown-item">
+                            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                                <button type="submit" class="nav-link btn btn-link text-dark">Salir</button>
+                            </form>
                         </li>
                     </ul>
-            }
+                </li>
+            </ul>
 
         </div>
     </nav>
@@ -83,6 +77,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/loadingoverlay/loadingoverlay.min.js"></script>
+    <script src="~/lib/sweetalert2/sweetalert2.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/store/layout_store.js"></script>
 

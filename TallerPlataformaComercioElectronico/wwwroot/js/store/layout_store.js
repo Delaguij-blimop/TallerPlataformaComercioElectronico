@@ -24,15 +24,19 @@ $(document).on('click', '.btn-agregar-carrito', function (event) {
     }
 
     jQuery.ajax({
-        url: '/Store/InsertShoppingCart',
+        url: '/Store/AddProductToShoppingCart',
         type: "POST",
         data: formData,
         success: function (data) {
             var actual = parseInt($(".contador-carrito").text());
-            if (data.respuesta != 0) {
+            if (data.response == true) {
                 actual = actual + 1;
                 $(".contador-carrito").text(actual);
                 $('#toast-carrito').toast('show');
+            }
+            else {
+                $("#mensaje-error").text(data.message);
+                $('#toast-alerta').toast('show');
             }
         },
         error: function (error) {

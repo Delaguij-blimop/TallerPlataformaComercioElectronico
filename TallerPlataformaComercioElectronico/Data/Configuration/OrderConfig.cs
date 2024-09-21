@@ -12,12 +12,9 @@ namespace TallerPlataformaComercioElectronico.Data.Configuration
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).ValueGeneratedOnAdd();
             builder.Property(x => x.TotalAmount).HasPrecision(18, 2).HasDefaultValue(0);
-            builder.Property(x => x.Contact).HasMaxLength(100);
-            builder.Property(x => x.Phone).HasMaxLength(100);
             builder.Property(x => x.Date).HasDefaultValueSql("getutcdate()");
 
             builder.HasOne(t => t.Currency).WithMany(m => m.Orders).HasForeignKey(t => t.CurrencyId);
-            builder.HasOne(t => t.BillingAddress).WithMany(m => m.Orders).HasForeignKey(t => t.BillingAddressId);
         }
     }
 }

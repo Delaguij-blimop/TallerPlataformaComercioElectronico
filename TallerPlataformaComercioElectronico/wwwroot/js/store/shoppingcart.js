@@ -1,4 +1,31 @@
-﻿$(document).ready(function () {
+﻿function zeroFill(number, width) {
+    width -= number.toString().length;
+    if (width > 0) {
+        return new Array(width + (/\./.test(number) ? 2 : 1)).join('0') + number;
+    }
+    return number + ""; // always return a string
+}
+
+function formatDate(date) {
+
+    const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+
+    var d = new Date(date),
+        month = (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2)
+        month = '0' + month;
+    if (day.length < 2)
+        day = '0' + day;
+
+    return day + ' de ' + monthNames[month] + ', ' + year;
+}
+
+$(document).ready(function () {
+    $(".btn-ver-categoria").hide();
     jQuery.ajax({
         url: '/Store/GetShoppingCarts',
         type: "GET",
@@ -25,9 +52,9 @@
                                 ),
                                 $("<div>").addClass("col-3").append(
                                     $("<div>").addClass("d-flex justify-content-end controles").append(
-                                        $("<button>").addClass("btn btn-outline-secondary btn-restar rounded-0").append($("<i>").addClass("fas fa-minus")).attr({ "type": "button" }),
-                                        $("<input>").addClass("form-control input-cantidad p-1 text-center rounded-0").css({ "width": "40px" }).attr({ "disabled": "disabled" }).val("1").data("price", item.product.price).data("productId", item.product.id),
-                                        $("<button>").addClass("btn btn-outline-secondary btn-sumar rounded-0").append($("<i>").addClass("fas fa-plus")).attr({ "type": "button" })
+                                        $("<button>").addClass("btn btn-outline-secondary btn-restar rounded-0").append($("<i>").addClass("fas fa-minus")).attr({ "type": "button" }).data("informacionRestar", { _shoppingCartId: item.id, _productId: item.product.id }),
+                                        $("<input>").addClass("form-control input-cantidad p-1 text-center rounded-0").css({ "width": "40px" }).attr({ "disabled": "disabled" }).val(item.quantity).data("price", item.product.price).data("productId", item.product.id),
+                                        $("<button>").addClass("btn btn-outline-secondary btn-sumar rounded-0").append($("<i>").addClass("fas fa-plus")).attr({ "type": "button" }).data("informacionSumar", { _shoppingCartId: item.id, _productId: item.product.id })
                                     )
                                 ),
                                 $("<div>").addClass("col-1").append(
@@ -37,8 +64,8 @@
                         )
                     ).appendTo("#productos-seleccionados");
                 })
-                obtenerPreciosPago();
-                obtenerCantidadProductos();
+                getTotalAmount();
+                getProductsQuantity();
             }
         },
         error: function (error) {
@@ -48,7 +75,7 @@
             $.LoadingOverlay("show");
         },
     });
-    ListarPaises();
+    GetCountries();
 })
 
 $(document).on('click', '.btn-sumar', function (event) {
@@ -56,17 +83,57 @@ $(document).on('click', '.btn-sumar', function (event) {
     var input = $(div).find("input.input-cantidad");
     var cantidad = parseInt($(input).val()) + 1;
     $(input).val(cantidad);
-    obtenerPreciosPago()
+
+    var json = $(this).data("informacionSumar");
+    let formData = {
+        shoppingCartId: json._shoppingCartId,
+        quantity: cantidad
+    }
+
+    jQuery.ajax({
+        url: '/Store/UpdateProductQuantity',
+        type: "POST",
+        data: formData,
+        success: function (data) {
+            if (data.result) {
+                getTotalAmount()
+            }
+        },
+        error: function (error) {
+            console.log(error)
+        }
+    });
+
 });
 
 $(document).on('click', '.btn-restar', function (event) {
     var div = $(this).parent("div.controles");
     var input = $(div).find("input.input-cantidad");
     var cantidad = parseInt($(input).val()) - 1;
+
     if (cantidad >= 1) {
         $(input).val(cantidad);
+
+        var json = $(this).data("informacionRestar");
+        let formData = {
+            shoppingCartId: json._shoppingCartId,
+            quantity: cantidad
+        }
+
+        jQuery.ajax({
+            url: '/Store/UpdateProductQuantity',
+            type: "POST",
+            data: formData,
+            success: function (data) {
+                if (data.result) {
+                    getTotalAmount()
+                }
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        });
     }
-    obtenerPreciosPago()
 });
 
 $(document).on('click', '.btn-eliminar', function (event) {
@@ -74,35 +141,32 @@ $(document).on('click', '.btn-eliminar', function (event) {
     var card_producto = $(this).parents("div.card-producto");
 
     let formData = {
-        shoppingCartId: json._shoppingCartId,
-        productId: json._productId
+        shoppingCartId: json._shoppingCartId
     }
 
     jQuery.ajax({
-        url: '/Store/DeleteShoppingCart',
+        url: '/Store/DeleteProductFromShoppingCart',
         type: "POST",
         data: formData,
         success: function (data) {
-            if (data.resultado) {
+            if (data.result) {
                 card_producto.remove();
-                obtenerPreciosPago();
-                obtenerCantidadProductos();
+                getTotalAmount();
+                getProductsQuantity();
                 obtenerCantidad();
             } else {
-                alert("No se pudo eliminar")
+                $("#mensaje-error").text("No se pudo eliminar");
+                $('#toast-alerta').toast('show');
             }
         },
         error: function (error) {
             console.log(error)
-        },
-        beforeSend: function () {
-
-        },
+        }
     });
 
 })
 
-function obtenerPreciosPago() {
+function getTotalAmount() {
     var total = 0;
     $("input.input-cantidad").each(function (index) {
         var precio = parseFloat($(this).val()) * parseFloat($(this).data("price"));
@@ -111,210 +175,69 @@ function obtenerPreciosPago() {
     $("#totalPagar").text("$ " + total.toString());
 }
 
-function obtenerCantidadProductos() {
+function getProductsQuantity() {
     $("#cantidad-articulos").text(" " + $("#productos-seleccionados > div.card").length.toString() + " ");
 
     if ($("#productos-seleccionados > div.card").length == 0) {
-        $("#btnProcesarPago").prop("disabled", true);
+        $("#btnConfirmarCompra").prop("disabled", true);
     }
 }
-
-function ListarPaises() {
-    jQuery.ajax({
-        url: '/Store/GetCountries',
-        type: "POST",
-        dataType: "json",
-        contentType: "application/json; charset=utf-8",
-        success: function (data) {
-            $("<option>").attr({ "value": "00", "disabled": "disabled", "selected": "true" }).text("Seleccionar").appendTo("#cboPais");
-            if (data.lista != null) {
-                $.each(data.lista, function (i, v) {
-                    $("<option>").attr({ "value": v.id }).text(v.description).appendTo("#cboPais");
-                });
-            }
-            ListarEstados();
-        },
-        error: function (error) {
-            console.log(error)
-        },
-        beforeSend: function () {
-        },
-    });
-}
-
-$("#cboPais").on("change", function () {
-    ListarEstados();
-});
-
-function ListarEstados() {
-
-    let formData = {
-        countryId: $("#cboPais option:selected").val()
-    }
-
-    jQuery.ajax({
-        url: '/Store/GetStates',
-        type: "POST",
-        data: formData,
-        success: function (data) {
-            $("#cboEstado").html("");
-            $("<option>").attr({ "value": "00", "disabled": "disabled", "selected": "true" }).text("Seleccionar").appendTo("#cboEstado");
-            if (data.lista != null) {
-                $.each(data.lista, function (i, v) {
-                    $("<option>").attr({ "value": v.id }).text(v.description).appendTo("#cboEstado");
-                });
-            }
-            ListarCiudades();
-        },
-        error: function (error) {
-            console.log(error)
-        },
-        beforeSend: function () {
-        },
-    });
-}
-
-$("#cboEstado").on("change", function () {
-    ListarCiudades();
-});
-
-function ListarCiudades() {
-
-    let formData = {
-        stateId: $("#cboEstado option:selected").val()
-    }
-
-    jQuery.ajax({
-        url: '/Store/GetCities',
-        type: "POST",
-        data: formData,
-        success: function (data) {
-            $("#cboCiudad").html("");
-            $("<option>").attr({ "value": "00", "disabled": "disabled", "selected": "true" }).text("Seleccionar").appendTo("#cboCiudad");
-            if (data.lista != null) {
-                $.each(data.lista, function (i, v) {
-                    $("<option>").attr({ "value": v.id }).text(v.description).appendTo("#cboCiudad");
-                });
-            }
-        },
-        error: function (error) {
-            console.log(error)
-        },
-        beforeSend: function () {
-        },
-    });
-}
-
-$("#btnProcesarPago").on("click", function (e) {
-    $(".control-validar").removeClass("border border-danger");
-    $(".control-validar").each(function (i) {
-        if ($(this).is('input')) {
-            if ($(this).val() == "") {
-                $(this).addClass("border border-danger")
-                falta_ingresar_datos = true;
-            }
-        } else if ($(this).is('select')) {
-            if ($(this).children("option:selected").val() == "00") {
-                $(this).addClass("border border-danger")
-                falta_ingresar_datos = true;
-            }
-        }
-    });
-
-    if ($("#cboPais").val() == null) {
-        $("#mensaje-error").text("Debe seleccionar un país");
-        $('#toast-alerta').toast('show');
-        return;
-    } else if ($("#cboEstado").val() == null) {
-        $("#mensaje-error").text("Debe seleccionar un estado");
-        $('#toast-alerta').toast('show');
-        return;
-    } else if ($("#cboCiudad").val() == null) {
-        $("#mensaje-error").text("Debe seleccionar una ciudad");
-        $('#toast-alerta').toast('show');
-        return;
-    } else if ($("#txtDireccion").val().trim() == "") {
-        $("#mensaje-error").text("Debe ingresar una dirección");
-        $('#toast-alerta').toast('show');
-        return;
-    } else if ($("#txtContacto").val().trim() == "") {
-        $("#mensaje-error").text("Debe ingresar un nombre de contacto");
-        $('#toast-alerta').toast('show');
-        return;
-    } else if ($("#txtTelefono").val().trim() == "") {
-        $("#mensaje-error").text("Debe ingresar un teléfono");
-        $('#toast-alerta').toast('show');
-        return;
-    }
-    $("#mdprocesopago").modal("show");
-})
 
 $("#btnConfirmarCompra").on("click", function (e) {
 
-    var falta_ingresar_datos = false;
+    var detalle = [];
+    var total = 0;
+    $("input.input-cantidad").each(function (index) {
+        var precio = parseFloat($(this).val()) * parseFloat($(this).data("price"));
+        detalle.push({
+            ProductId: parseInt($(this).data("productId")),
+            Quantity: parseInt($(this).val()),
+            Amount: precio
+        });
+        total = total + precio;
+    });
 
-    $(".control-validar").removeClass("border border-danger");
-
-    if ($("#trj_nombre").val().trim() == "") {
-        $("#mensaje-error").text("Debe ingresar nombre del titular");
-        $('#toast-alerta').toast('show');
-        return;
-    } else if ($("#trj_numero").val().trim() == "") {
-        $("#mensaje-error").text("Debe ingresar número de la tarjeta");
-        $('#toast-alerta').toast('show');
-        return;
-    } else if ($("#trj_vigencia").val().trim() == "") {
-        $("#mensaje-error").text("Debe ingresar vigencia de la tarjeta");
-        $('#toast-alerta').toast('show');
-        return;
-    } else if ($("#trj_cvv").val().trim() == "") {
-        $("#mensaje-error").text("Debe ingresar CVV de la tarjeta");
-        $('#toast-alerta').toast('show');
-        return;
+    var request = {
+        TotalQuantity: $("#productos-seleccionados > div.card").length,
+        TotalAmount: total,
+        Detail: detalle
     }
 
-    if (!falta_ingresar_datos) {
-        var detalle = [];
-        var total = 0;
-        $("input.input-cantidad").each(function (index) {
-            var precio = parseFloat($(this).val()) * parseFloat($(this).data("price"));
-            detalle.push({
-                ProductId: parseInt($(this).data("productId")),
-                Quantity: parseInt($(this).val()),
-                Amount: precio
-            });
-            total = total + precio;
-        });
-
-        var request = {
-            TotalQuantity: $("#productos-seleccionados > div.card").length,
-            TotalAmount: total,
-            Contact: $("#txtContacto").val(),
-            Phone: $("#txtTelefono").val(),
-            BillingAddress: {
-                Street: $("#txtDireccion").val(),
-                PostalCode: $("#txtCodigoPostal").val(),
-                CityId: $("#cboCiudad").val()
-            },
-            Detail: detalle
-        }
-
-        jQuery.ajax({
-            url: '/Store/InsertOrder',
-            type: "POST",
-            data: request,
-            success: function (data) {
-                if (data.resultado) {
-                    swal("Compra Realizada", "Pronto te informaremos la entrega de tu pedido", "success").then((value) => {
-                        window.location.href = "/Store/Index"
+    jQuery.ajax({
+        url: '/Store/GenerateOrder',
+        type: "POST",
+        data: request,
+        success: function (data) {
+            if (data.result) {
+                Swal.fire({
+                    icon: "success",
+                    title: "Compra Generada",
+                    text: "Realiza el pago para completar el proceso",
+                    showConfirmButton: false,
+                    timer: 5000
+                }).then((value) => {
+                    $("#mdprocesopago").modal("show");
+                    $("#procesoPagoModalLabel").text("Procesar Pago - Orden N° " + zeroFill(data.order.id, 6));
+                    $("#totalaPagar").text("$ " + data.order.totalAmount);
+                    $("#btnProcesarPago").data("informacionPago", { order: data.order })
+                    $("#mdprocesopago").on("hidden.bs.modal", function () {
+                        window.location.href = "/Store/ShoppingCart"
                     });
-                } else {
-                    swal("Lo sentimos", "No se  pudo completar la compra", "warning");
-                }
-            },
-            error: function (error) {
-                console.log(error)
+                });
+            } else {
+                Swal.fire({
+                    icon: "warning",
+                    title: "Lo sentimos",
+                    text: "No se pudo completar la compra",
+                    showConfirmButton: false,
+                    timer: 3000
+                });
             }
-        });
-    }
+        },
+        error: function (error) {
+            console.log(error)
+        }
+    });
 })
+
+

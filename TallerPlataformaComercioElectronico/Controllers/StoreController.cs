@@ -17,10 +17,11 @@ namespace TallerPlataformaComercioElectronico.Controllers
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IGeoService _geoService;
         private readonly IOrderService _orderService;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly string _webRootPath;
-        private string _userName;
-        public StoreController(ILogger<StoreController> logger, ICategoryService categoryService, IProductService productService, IShoppingCartService shoppingCartService, IGeoService geoService, IOrderService orderService, UserManager<IdentityUser> userManager, IWebHostEnvironment webHostEnvironment)
+        private string? _userName;
+
+        public StoreController(ILogger<StoreController> logger, ICategoryService categoryService, IProductService productService, IShoppingCartService shoppingCartService, IGeoService geoService, IOrderService orderService, UserManager<ApplicationUser> userManager, IWebHostEnvironment webHostEnvironment)
         {
             _logger = logger;
             _categoryService = categoryService;
@@ -114,33 +115,37 @@ namespace TallerPlataformaComercioElectronico.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> InsertShoppingCart(int productId)
+        public async Task<JsonResult> AddProductToShoppingCart(int productId)
         {
             string _userName = await GetCurrentUserName();
             ShoppingCart cart = new ShoppingCart();
             bool _response;
+            string _message;
 
-            if (await ExistsProductInShoppingCart(productId) == false)
+            if (await _shoppingCartService.ExistsProductInShoppingCart(productId, _userName) == true)
             {
                 //El producto ya existe en el carrito
                 _response = false;
-                return Json(new { response = _response });
+                _message = "El producto ya existe en el carrito";
+                return Json(new { response = _response, message = _message });
             }
-
-            if (await GetProductStock(productId) <= 1)
+            if (await _productService.GetProductStock(productId) <= 1)
             {
                 //No hay stock del producto
                 _response = false;
-                return Json(new { response = _response });
+                _message = "No hay stock disponible";
+                return Json(new { response = _response, message = _message });
             }
 
             cart.UserName = _userName;
             cart.ProductId = productId;
+            cart.Quantity = 1;
             cart.IsActive = true;
             await _shoppingCartService.Insert(cart);
             _response = cart.Id == 0 ? false : true;
+            _message = cart.Id == 0 ? "No se pudo agregar el producto" : "Producto agregado al carrito";
 
-            return Json(new { response = _response });
+            return Json(new { response = _response, message = _message });
         }
 
         [HttpGet]
@@ -165,6 +170,7 @@ namespace TallerPlataformaComercioElectronico.Controllers
                           select new ShoppingCart()
                           {
                               Id = d.Id,
+                              Quantity = d.Quantity,
                               Product = new Product()
                               {
                                   Id = d.Product.Id,
@@ -182,11 +188,24 @@ namespace TallerPlataformaComercioElectronico.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> DeleteShoppingCart(int shoppingCartId, int productId)
+        public async Task<JsonResult> DeleteProductFromShoppingCart(int shoppingCartId)
         {
             bool response = false;
-            response = await _shoppingCartService.Delete(shoppingCartId, productId);
-            return Json(new { resultado = response });
+            response = await _shoppingCartService.Delete(shoppingCartId);
+            return Json(new { result = response });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> UpdateProductQuantity(int shoppingCartId, int quantity)
+        {
+            bool response = false;
+
+            var shoppingCartToUpdate = await _shoppingCartService.GetById(shoppingCartId);
+            shoppingCartToUpdate.Quantity = quantity;
+
+            response = await _shoppingCartService.UpdateQuantity(shoppingCartToUpdate);
+
+            return Json(new { result = response });
         }
 
         [HttpPost]
@@ -214,18 +233,22 @@ namespace TallerPlataformaComercioElectronico.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> InsertOrder(Order order)
+        public async Task<JsonResult> GenerateOrder(Order order)
         {
             bool response = false;
             string _userName = await GetCurrentUserName();
 
             order.UserName = _userName;
+            order.Date = DateTime.Today;
+            order.CurrencyId = 1;
+
             response = await _orderService.Insert(order);
-            return Json(new { resultado = response });
+            var orderInfo = new Order { Id = order.Id, UserName = order.UserName, TotalAmount = order.TotalAmount, TotalQuantity = order.TotalQuantity };
+            return Json(new { result = response, order = orderInfo });
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetOrder()
+        public async Task<JsonResult> GetOrders()
         {
             IEnumerable<Order> oList = new List<Order>();
             string _userName = await GetCurrentUserName();
@@ -235,14 +258,23 @@ namespace TallerPlataformaComercioElectronico.Controllers
             oList = (from c in oList
                       select new Order()
                       {
+                          Id = c.Id,
+                          UserName = c.UserName,
                           TotalAmount = c.TotalAmount,
                           TotalQuantity = c.TotalQuantity,
                           Date = c.Date,
+                          Payments = (from p in c.Payments
+                                    select new Payment()
+                                    {
+                                        OrderId = p.OrderId
+                                    }).ToList(),
                           Detail = (from dc in c.Detail
                                             select new OrderDetail()
                                             {
+                                                OrderId = dc.OrderId,
                                                 Product = new Product()
                                                 {
+                                                    Id = dc.ProductId,
                                                     Brand = new Brand() { Description = dc.Product.Brand.Description },
                                                     Description = dc.Product.Description,
                                                     ImagePath = dc.Product.ImagePath,
@@ -253,7 +285,7 @@ namespace TallerPlataformaComercioElectronico.Controllers
                                                 Quantity = dc.Quantity
                                             }).ToList()
                       }).ToList();
-            return Json(new { lista = oList });
+            return Json(new { list = oList });
         }
 
         private async Task<string> GetCurrentUserName()
@@ -266,17 +298,17 @@ namespace TallerPlataformaComercioElectronico.Controllers
             return _userName;
         }
 
-        private async Task<bool> ExistsProductInShoppingCart(int productId)
+        private async Task<bool> UserHasFraudReport()
         {
-            string _userName = await GetCurrentUserName();
-            var cart = await _shoppingCartService.GetShoppingCartsByUserAndProduct(_userName, productId);
-            return cart.Any();
+            var user = await _userManager.GetUserAsync(User);
+            return user.FraudReport;
         }
 
-        private async Task<int> GetProductStock(int productId)
+        private async Task<bool> UserIsAdmin()
         {
-            int stock = await _productService.GetStockAvailable(productId);
-            return stock;
+            var user = await _userManager.GetUserAsync(User);
+            return user.IsAdmin;
         }
+
     }
 }
