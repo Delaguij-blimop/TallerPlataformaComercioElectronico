@@ -6,7 +6,7 @@ const inputCVV = document.getElementById("trj_cvv");
 // Definición de las máscaras para formato de entrada
 const mascaraNumero = "####-####-####-####";
 const mascaraFecha = "##/##";
-const mascaraCVV = "###";
+const mascaraCVV = "####";
 
 // Arreglos para almacenar los valores ingresados
 let TarjetaNumero = [];

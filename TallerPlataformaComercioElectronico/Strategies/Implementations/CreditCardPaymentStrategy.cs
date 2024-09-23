@@ -28,11 +28,7 @@ namespace TallerPlataformaComercioElectronico.PaymentStrategies.Implementations
             }
 
             //Validar Vencimiento
-            var mes = int.Parse(paymentRequest.PaymentMethod.ExpirationDate.Substring(0, 2));
-            var anio = int.Parse(paymentRequest.PaymentMethod.ExpirationDate.Substring(3, 2)) + 2000;
-            var fechaVencimiento = anio.ToString() + "-" + mes.ToString("00") + "-01";
-            if (DateTime.Parse(fechaVencimiento).Year < DateTime.Today.Year ||
-                (DateTime.Parse(fechaVencimiento).Year == DateTime.Today.Year && DateTime.Parse(fechaVencimiento).Month < DateTime.Today.Month))
+            if (!Utilities.ExpirationDateIsValid(paymentRequest.PaymentMethod.ExpirationDate))
             {
                  return new PaymentResponse
                  {
@@ -48,7 +44,7 @@ namespace TallerPlataformaComercioElectronico.PaymentStrategies.Implementations
                 PaymentMethodId = (int)paymentRequest.PaymentMethod.Type,
                 CardNumber = paymentRequest.PaymentMethod.CardNumber,
                 CardHolderName = paymentRequest.PaymentMethod.CardholderName,
-                ExpirationDate = DateTime.Parse(fechaVencimiento),
+                ExpirationDate = Utilities.ParseExpirationDate(paymentRequest.PaymentMethod.ExpirationDate),
                 CVV = paymentRequest.PaymentMethod.CVV,
                 Amount = paymentRequest.Amount,
                 BillingAddress = new Address {

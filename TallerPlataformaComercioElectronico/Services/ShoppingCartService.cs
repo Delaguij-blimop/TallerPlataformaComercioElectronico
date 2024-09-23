@@ -14,17 +14,18 @@ namespace TallerPlataformaComercioElectronico.Services
             _shoppingCartRepository = shoppingCartRepository;
         }
 
-        public async Task<int> Insert(ShoppingCart shoppingCart)
+        public async Task<bool> Insert(ShoppingCart shoppingCart)
         {
-            int response = 0;
+            bool response = false;
             try
             {
                 await _shoppingCartRepository.InsertAsync(shoppingCart);
                 await _shoppingCartRepository.SaveAsync();
+                response = true;
             }
             catch (Exception ex)
             {
-                response = 0;
+                response = false;
             }
             return response;
         }

@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using TallerPlataformaComercioElectronico.Models;
 
 namespace TallerPlataformaComercioElectronico.Helpers
 {
@@ -45,6 +46,48 @@ namespace TallerPlataformaComercioElectronico.Helpers
 
             }
             return (sum % 10) == 0;
+        }
+
+        public static bool ExpirationDateIsValid(string expirationDate)
+        {
+            DateTime fechaVencimiento = ParseExpirationDate(expirationDate);
+            if (fechaVencimiento.Year < DateTime.Today.Year ||
+                (fechaVencimiento.Year == DateTime.Today.Year && fechaVencimiento.Month < DateTime.Today.Month))
+                return false;
+            else
+                return true;
+        }
+
+        public static DateTime ParseExpirationDate(string expirationDate)
+        {
+            if (string.IsNullOrEmpty(expirationDate))
+                return DateTime.MinValue;
+
+            int mes;
+            if(!int.TryParse(expirationDate.Substring(0, 2), out mes))
+                return DateTime.MinValue;
+
+            int anio;
+            if (!int.TryParse(expirationDate.Substring(3, 2), out anio))
+                return DateTime.MinValue;
+            else
+                anio += 2000;
+
+            var fechaVencimiento = anio.ToString() + "-" + mes.ToString("00") + "-01";
+            return DateTime.Parse(fechaVencimiento);
+        }
+
+        public static bool CVVIsValid(string creditCardNumber, string CVV)
+        {
+            if (string.IsNullOrEmpty(CVV))
+                return false;
+            else
+            {
+                if (creditCardNumber.Substring(0, 1) == "3")
+                    return CVV.Length == 4;
+                else
+                    return CVV.Length == 3;
+            }
         }
     }
 }

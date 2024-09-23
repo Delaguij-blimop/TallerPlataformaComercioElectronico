@@ -5,7 +5,7 @@ namespace TallerPlataformaComercioElectronico.Services.Interfaces
     public interface IShoppingCartService
     {
         Task<ShoppingCart> GetById(int shoppingCartId);
-        Task<int> Insert(ShoppingCart shoppingCart);
+        Task<bool> Insert(ShoppingCart shoppingCart);
         Task<bool> Delete(int shoppingCartId);
         Task<bool> UpdateQuantity(ShoppingCart shoppingCart);
         Task<int> GetQuantityByUser(string userName);
