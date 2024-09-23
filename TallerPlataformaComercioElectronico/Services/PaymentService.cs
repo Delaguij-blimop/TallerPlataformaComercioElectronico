@@ -1,4 +1,5 @@
 ﻿using TallerPlataformaComercioElectronico.Entities;
+using TallerPlataformaComercioElectronico.Helpers;
 using TallerPlataformaComercioElectronico.Repositories.Interfaeces;
 using TallerPlataformaComercioElectronico.Services.Interfaces;
 
@@ -44,16 +45,24 @@ namespace TallerPlataformaComercioElectronico.Services
 
         public async Task<bool> Insert(Payment payment)
         {
-            bool response = true;
+            bool response = false;
             try
             {
-                //Genera un numero random para la transaccion
-                Random rnd = new Random();
-                string transactionId = "tx" + rnd.Next(10000, 99999).ToString() + rnd.Next(10000, 99999).ToString();
-                payment.TransactionId = transactionId;
+                var respuestaRandom = Utilities.PaymentRandomResponse(payment.ForcedResult);
+                payment.ResponseCode = respuestaRandom.GetValueOrDefault("Code");
+                payment.ResponseMessage = respuestaRandom.GetValueOrDefault("Description");
 
-                await _paymentRepository.InsertAsync(payment);
-                await _paymentRepository.SaveAsync();
+                if (payment.ResponseCode == "Payment_success") {
+                    //Genera un numero random para la transaccion
+                    Random rnd = new Random();
+                    string transactionId = "tx" + rnd.Next(10000, 99999).ToString() + rnd.Next(10000, 99999).ToString();
+                    payment.TransactionId = transactionId;
+
+                    await _paymentRepository.InsertAsync(payment);
+                    await _paymentRepository.SaveAsync();
+
+                    response = true;
+                }
             }
             catch (Exception ex)
             {

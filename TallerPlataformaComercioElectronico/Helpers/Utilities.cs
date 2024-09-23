@@ -1,10 +1,11 @@
 ﻿using System.Text;
-using TallerPlataformaComercioElectronico.Models;
 
 namespace TallerPlataformaComercioElectronico.Helpers
 {
     public class Utilities
     {
+        private static Random random = new Random();
+
         public static string convertirBase64(string ruta)
         {
             byte[] bytes = File.ReadAllBytes(ruta);
@@ -88,6 +89,36 @@ namespace TallerPlataformaComercioElectronico.Helpers
                 else
                     return CVV.Length == 3;
             }
+        }
+
+        public static Dictionary<string, string> PaymentRandomResponse(int? forcedResult = null)
+        {
+            Dictionary<string, string> response = new Dictionary<string, string>();
+            int numero = forcedResult != null ? (int)forcedResult : random.Next(2);
+            if (numero == 0) {
+                //Success
+                response.Add("Code", "Payment_success");
+                response.Add("Description", "Pago procesado con éxito.");
+            }
+            else
+            {
+                //Error
+                int numeroError = random.Next(2);
+                switch (numeroError)
+                {
+                    case 0:
+                        response.Add("Code", "Insufficient_funds");
+                        response.Add("Description", "Los fondos son insuficientes.");
+                        break;
+                    case 1:
+                        response.Add("Code", "Blocked_card");
+                        response.Add("Description", "La Tarjeta está bloqueada.");
+                        break;
+                    default:
+                        break;
+                }
+            }
+            return response;
         }
     }
 }

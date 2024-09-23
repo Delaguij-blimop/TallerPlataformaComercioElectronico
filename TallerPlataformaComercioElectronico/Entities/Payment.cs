@@ -1,4 +1,6 @@
-﻿namespace TallerPlataformaComercioElectronico.Entities
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace TallerPlataformaComercioElectronico.Entities
 {
     public class Payment
     {
@@ -17,5 +19,15 @@
         public virtual Address? BillingAddress { get; set; }
         public virtual Order? Order { get; set; }
         public virtual PaymentMethod? PaymentMethod { get; set; }
+
+
+        [NotMapped]
+        public int? ForcedResult { get; set; }
+
+        [NotMapped]
+        public string? ResponseCode { get; set; }
+
+        [NotMapped]
+        public string? ResponseMessage { get; set; }
     }
 }

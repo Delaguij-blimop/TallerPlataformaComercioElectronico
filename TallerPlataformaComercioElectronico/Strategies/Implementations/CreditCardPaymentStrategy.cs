@@ -53,7 +53,8 @@ namespace TallerPlataformaComercioElectronico.PaymentStrategies.Implementations
                     PostalCode = paymentRequest.BillingAddress.PostalCode,
                     Type = AddressType.Billing,
                     CityId = paymentRequest.BillingAddress.CityId
-                }
+                },
+                ForcedResult = 0
             };
 
             var response = await _paymentService.Insert(payment);
@@ -64,9 +65,8 @@ namespace TallerPlataformaComercioElectronico.PaymentStrategies.Implementations
                 Amount = payment.Amount,
                 Currency = paymentRequest.Currency,
                 OrderId = payment.OrderId.ToString("000000"),
-                Message = response == true ? "Credit Card Payment processed successfully." : "There was an error processing the payment."
+                Message = response == true ? "Tarjeta de Crédito - " + payment.ResponseMessage : "T.C. Error al procesar el pago: " + payment.ResponseMessage
             };
-
         }
     }
 }
